@@ -1,0 +1,60 @@
+# we can use its start script to create a skeleton project
+django-admin startproject helloapp
+
+# helloapp/settings.py
+TIME_ZONE = 'UTC'
+# to
+# helloapp/settings.py
+TIME_ZONE = 'Asia/Jakarta'
+
+# Running this command will create an app called howdy
+cd helloapp
+python manage.py startapp howdy
+
+#To get Django to recognize our brand new app, we need to add the app name to the Installed Apps list in our settings.py file.
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'howdy'
+]
+#Once that is done, let's run our server and see what will be output. We mentioned that Django comes with a built in lightweight web server which, while useful during development, should never be used in production. Run the server as follows:
+
+python manage.py runserver
+
+#migrations
+#Migrations make it easy for you to change your database schema (model) without having to lose any data. Any time you create a new database model, running migrations will update your database tables to use the new schema without you having to lose any data or go through the tedious process of dropping and recreating the database yourself.
+
+python manage.py migrate
+
+#Urls & Templates
+We need Django to access our howdy app when someone goes to the home page URL which is /.
+there is an existing URL pattern for the Django admin site which comes by default with Django.
+Let's add our own url to point to our howdy app.
+
+    url(r'^admin/', admin.site.urls),
+    url(r'^', include('howdy.urls')),
+
+Note that we have added an import for include from django.conf.urls and added a url pattern for an empty route. When someone accesses the homepage, (in our case http://localhost:8000), Django will look for more url definitions in the howdy app. Since there are none, running the app will produce a huge stack trace due to an ImportError.
+
+create urls.py in howdy folder
+
+# howdy/urls.py
+from django.conf.urls import url
+from howdy import views
+
+
+urlpatterns = [
+    url(r'^$', views.HomePageView.as_view()),
+]
+
+
+
+
+
+
+
