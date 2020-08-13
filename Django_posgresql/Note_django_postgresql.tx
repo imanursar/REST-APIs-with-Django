@@ -1,0 +1,44 @@
+# Now we open settings.py and add Django REST framework to the INSTALLED_APPS array here.
+
+INSTALLED_APPS = [
+    ...
+    # Django REST framework
+    'rest_framework',
+]
+
+#Connect Django project to PostgreSQL
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'testdb',
+        'USER': 'postgres',
+        'PASSWORD': '123',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
+
+Don’t forget to add this app to INSTALLED_APPS array in settings.py:
+
+INSTALLED_APPS = [
+    ...
+    # Tutorials application
+    'tutorials.apps.TutorialsConfig',
+]
+
+
+# Configure CORS
+INSTALLED_APPS = [
+    ...
+    # CORS
+    'corsheaders',
+]
+
+You also need to add a middleware class to listen in on responses:
+
+MIDDLEWARE = [
+    ...
+    # CORS
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
