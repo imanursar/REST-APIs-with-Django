@@ -1,18 +1,50 @@
 # we can use its start script to create a skeleton project
 django-admin startproject helloapp
 
-# helloapp/settings.py
+
+#Django Project
+A Django project is used for the entire Web application. That is there will be one project for handling one complete website.
+Inside the project, there can be many different Django apps handling a variety of processes.
+
+#Django App
+Inside a project, an app is used for handling a particular section of the website. In a typical web application, one app is used entirely for User Authentication, one entirely for Payments, etc.
+
+# explain
+##<project_name>/manage.py python file manages the whole project and combines different parts of the project together for the Web application.
+##/apps.py: declares TutorialsConfig class (subclass of django.apps.AppConfig) that represents Rest CRUD Apis app and its configuration.
+##<project_name>/settings.py: contains settings for our Django project: Database engine, INSTALLED_APPS list with Django REST framework, Tutorials Application, CORS and MIDDLEWARE. This file is present for adding all the applications and the middleware application present. Also, it has information about templates and databases. Overall, this is the main file of our Django web application.
+##/models.py: defines Tutorial data model class (subclass of django.db.models.Model).
+##migrations/0001_initial.py: is created when we make migrations for the data model, and will be used for generating database table.
+##tutorials/serializers.py: manages serialization and deserialization with TutorialSerializer class (subclass of rest_framework.serializers.ModelSerializer).
+##tutorials/views.py: contains functions to process HTTP requests and produce HTTP responses (using TutorialSerializer).
+##tutorials/urls.py: defines URL patterns along with request functions in the Views. This file handles all the URLs of our web application. This file has the lists of all the endpoints that we will have for our website.
+##DjangoRestApi/urls.py: also has URL patterns that includes tutorials.urls, it is the root URL configurations.
+##/wsgi.py: This file mainly concerns with the WSGI server and is used for deploying our applications on to servers like Apache etc.  WSGI, short for Web Server Gateway Interface can be thought of as a specification that describes how the servers interact with web applications.
+##/asgi.py: apart from wsgi.py. ASGI can be considered as a succeeder interface to the WSGI. ASGI, short for Asynchronous Server Gateway interface also has the work similar to WSGI but this is better than the previous one as it gives better freedom in Django development. That’s why WSGI is now being increasingly replaced by ASGI.
+
+##/admin.py: As the name suggests, this file is used for registering the models into the Django administration. The models that are present have a superuser/admin who can control the information that is being stored.
+##/apps.py: This file deals with the application configuration of the apps
+##/models.py: This file contains the models of our web applications (usually as classes). Models are basically the blueprints of the database we are using and hence contain the information regarding attributes and the fields etc of the database.
+##/views.py: This file is a crucial one, it contains all the Views(usually as classes). Views.py can be considered as a file that interacts with the client. Views are a user interface for what we see when we render a Django Web application.
+##/urls.py: Just like the project urls.py file, this file handles all the URLs of our web application. This file is just to link the Views in the app with the host web URL. The settings urls.py has the endpoints corresponding to the Views.
+
+
+
+
+# TIME_ZONE
+helloapp/settings.py
 TIME_ZONE = 'UTC'
 # to
 # helloapp/settings.py
 TIME_ZONE = 'Asia/Jakarta'
 
+
 # Running this command will create an app called howdy
 cd helloapp
 python manage.py startapp howdy
 
+#Note: The Django project won’t know about the app on its own and hence you have to mention it in the django_project/settings.py.
 #To get Django to recognize our brand new app, we need to add the app name to the Installed Apps list in our settings.py file.
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,12 +56,19 @@ INSTALLED_APPS = [
 ]
 #Once that is done, let's run our server and see what will be output. We mentioned that Django comes with a built in lightweight web server which, while useful during development, should never be used in production. Run the server as follows:
 
+
+# running server
 python manage.py runserver
 
+
 #migrations
-#Migrations make it easy for you to change your database schema (model) without having to lose any data. Any time you create a new database model, running migrations will update your database tables to use the new schema without you having to lose any data or go through the tedious process of dropping and recreating the database yourself.
+Migrations make it easy for you to change your database schema (model) without having to lose any data. Any time you create a new database model, running migrations will update your database tables to use the new schema without you having to lose any data or go through the tedious process of dropping and recreating the database yourself.
 
 python manage.py migrate
+
+# modifying
+In Django, it requires 3-4 files to show a particular web page. The sequence is given below
+URL — Views — models(normally) — template
 
 #Urls & Templates
 We need Django to access our howdy app when someone goes to the home page URL which is /.
@@ -41,20 +80,13 @@ Let's add our own url to point to our howdy app.
 
 Note that we have added an import for include from django.conf.urls and added a url pattern for an empty route. When someone accesses the homepage, (in our case http://localhost:8000), Django will look for more url definitions in the howdy app. Since there are none, running the app will produce a huge stack trace due to an ImportError.
 
+
 create urls.py in howdy folder
 
 # howdy/urls.py
 from django.conf.urls import url
 from howdy import views
 
-
 urlpatterns = [
     url(r'^$', views.HomePageView.as_view()),
 ]
-
-
-
-
-
-
-
