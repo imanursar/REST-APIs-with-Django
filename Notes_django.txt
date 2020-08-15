@@ -43,6 +43,10 @@ TIME_ZONE = 'Asia/Jakarta'
 cd helloapp
 python manage.py startapp howdy
 
+The outer /howdy is just a folder that contains all our project code.
+
+The inner /howdy is the main python package for our project.
+
 #Note: The Django project won’t know about the app on its own and hence you have to mention it in the django_project/settings.py.
 #To get Django to recognize our brand new app, we need to add the app name to the Installed Apps list in our settings.py file.
 INSTALLED_APPS = [
@@ -65,6 +69,9 @@ python manage.py runserver
 Migrations make it easy for you to change your database schema (model) without having to lose any data. Any time you create a new database model, running migrations will update your database tables to use the new schema without you having to lose any data or go through the tedious process of dropping and recreating the database yourself.
 
 python manage.py migrate
+
+# makemigrations is responsible for creating new migrations based on the changes we make to our models.
+# migrate is responsible for applying and unapplying migrations.
 
 # modifying
 In Django, it requires 3-4 files to show a particular web page. The sequence is given below
