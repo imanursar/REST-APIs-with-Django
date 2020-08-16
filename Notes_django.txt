@@ -97,3 +97,364 @@ from howdy import views
 urlpatterns = [
     url(r'^$', views.HomePageView.as_view()),
 ]
+
+# Basics of the Django URL Library
+Here in the django.urls library, we have various functions that we are gonna use in our web application. Let’s learn more about them.
+
+1. path(route,view, kwargs, name)
+This function returns an element that needs to be included in urlpatterns. That is, path acts as a link between an element (for eg Views) and its URL.
+
+#1. route
+This is the URL for a particular view. For eg: ‘<name>/’ is a route.
+So when we request this page from the URL, the server will return the view linked to it.
+
+#2. view
+Here we need to write, the view name that we need to link. Or use the function “include” to add another urls.py file. (Like in the project/urls.py file)
+
+#3. **kwargs and *args
+args in function definition in python is a syntax used for the variable input argument list.
+
+2. include(module,namespace=None)
+This function takes another URL conf file that should be included by using this include function. That is to form a link with another urls.py file you should use include function. The namespaces can also be written inside but we don’t need to do that for now.
+
+## Views
+View function or simply a view can be thought of as a python function which, on taking up request returns a specific response to it. The response can be anything from a simple text to an HTML file to something like an image etc.
+
+In a typical web application, we have views such as:
+
+    Homepage View
+    Detail/instruction View
+    Help page View
+    FAQ View
+
+#Function-based Views
+In this type, Views are written as Python functions taking in request(HttpRequest) object as argument and returning a corresponding response(HttpResponse).
+Django function-based views are used to make CRUD operations(Create, Retrieve, Update, and Delete).
+
+#Class-based Views
+As the names suggest, the views are written as Classes instead of Functions to return the HTTP response to the particular requests. Hence in this, we can have all CRUD as methods thus having all of them in the same view.
+Also, class-based Views are dived further into many types, few of which are important and we are going to learn in the upcoming articles.
+    Detail View
+    List View
+    Mixins
+Now since we are dealing with responses and mainly HTTP responses, we should learn what they are.
+
+
+## HTTP Status Codes
+These HTTP attributes are used to give more information to the client regarding the responses from the webserver. The most common and frequently used HTTP attributes that we need to learn are:
+
+1. HTTP 200 – status OK
+This means that the status is OK, which can be thought of as that everything was carried out correctly.
+
+2. HTTP 201 – status created
+This means that the status is created, we might use this one under Create/POST method.
+
+3. HTTP 400 – Bad request
+This means that the server will not process the request.
+
+4. HTTP 404 – Not Found
+This means that the server is unable to find the response that it needs to return
+
+## Views.py
+1. View having text as response
+return HttpResponse("hello World", status=200)
+
+2. View having HTML line and image as response
+Here we have stored HTML code in a variable called HTML. And then we are sending it as a response back. In the HTML code, we are sending a heading and a picture named Lena.jpg
+
+html = "<h1>Hello There This is a HTML file</h1><img src="lena.png" alt="picture" width = "104" height="142">
+return HttpResponse(html,status=200)
+
+
+## Getting Started with the Django Admin Site
+#Creating a superuser
+If you try to go onto the admin/ endpoint (host website/admin), you will see that a username and password is required. These are the username and password of a superuser of the web application.
+
+A superuser is like the topmost admin of the site and has the following uses:
+    - Has the entire power to delete, change, add new elements to the tables.
+    - Can also create new users (as well as superusers) and assign different user permissions to these users.
+
+To create a new superuser we write the code below in the shell
+
+    python manage.py createsuperuser
+
+
+## Editing Model Table elements through Admin site
+1. Add New Objects
+In the admin site, select the Author Model, and then on the top right, you will see an add new object option. 
+
+2. Edit/Modify Existing Objects
+If you want to change any element that you saved before, you can click on it and the below page will appear again.
+You can now edit them, and once done click on save to save the new values. 
+
+3. Delete Objects
+Click on the element you want to delete and then you will the below page.
+A delete option in red just below the fields will appear, just click on that delete button and that particular object will get deleted.
+
+
+## Foreign Key linking with the Django admin interface
+
+
+## Changing the Interface View
+#1. Decorator
+ @admin.register(Kcb)
+ admin.register(Kcb) is known as a register and is used with
+ a @ symbol before the class it is being applied on.
+ Its function is similar to that of admin.site.register.
+ This just a different way of registering the model along with adminModel.
+
+#2. Fields
+This option lets you arrange the order and the position the model Fields are to be displayed in the admin interface.
+Note: This option takes the input (of Fields) as tuples.
+
+fields =(('title','price'),'genre','author_id')
+
+Here you can see the order in which I want the fields to be there.
+If you want more than one field to display on the same horizontal level then we add them both together as a tuple. (as shown in the code)
+
+('title','price') #will in same side in edit or input admin area
+
+#3. list_display
+Now if you see the image, there is only one heading “Book Model”. Now if you want to show different heading then we use this option called list_display.
+Hence this option lets you choose what all fields to display at the page shown above.
+Note: This option takes input as tuples.
+
+list_display = ('title','price')
+
+#4. list_filter
+As you can see, in the default interface., there is no filter-by option. Using list_filter creates a filter-by option on the page shown above. This helps us to search for a particular element in the table quickly.
+
+Note: This option takes input as tuples. 
+
+list_filter = ('genre',)
+
+#5. ordering
+Just like the MetaClass we saw in Django Models, ordering here has the same functionality. We can specify the order in which the elements of a particular field will be displayed. 
+The syntax is similar to that of the ordering in the MetaClass models. 
+Note : This option takes input as tuples.
+	
+ordering = ('title',)
+
+#6. Fieldsets
+This is another way of mentioning the fields that we saw above.
+As you would have seen on many websites, there is optional information that you can see after clicking a show more button. Fieldsets give us the same ability to keep some of the fields as optional while some as required.
+
+The syntax for this is a bit confusing, try to understand the code given below:
+	
+fieldsets =(
+            ('Required information',{
+                'description' : '<'description_sentence>',
+                'fields':('<model_fields'>)
+            }),
+            ('Optional Information',{
+                'classes' : ('collapse',),
+                'fields': ('<model_fields>')
+            })
+    )
+
+There are many other similar admin options available in the admin library that can be used like:
+
+    Empty_value_display
+    exclude
+    list_editable
+    readonly_fields
+
+Note: For a single value tuple, we need to include a comma sign “,” at the end to indicate Python that it is a tuple.
+
+@admin.register(BookModel)
+class BookModelAdmin(admin.ModelAdmin):
+     
+    fields =(('title','price'),'genre','author_id')
+    list_display = ('title','price')
+    list_filter = ('genre',)
+    ordering = ('title',)
+	
+We kept title and price at the same horizontal level
+List-display of both title and price
+Filtering by genre
+Alphabetical ordering of elements according to the title
+
+
+## Changing AuthorModel view in the admin site
+
+Similarly, let us change the look of AuthorModel using the admin options learned above as well. 
+
+	@admin.register(AuthorModel)
+	class AuthorModelAdmin(admin.ModelAdmin):
+	 
+		fieldsets =(
+				('Required information',{
+					'description' : 'These fields are compulsory',
+					'fields':('first_name',)
+				}),
+				('Optional Information',{
+					'classes' : ('collapse',),
+					'fields': ('last_name',)
+				})
+		)
+	 
+		list_display =('first_name','last_name')
+		ordering =('first_name',)
+
+The first name is used under required information # in edit admin area
+The last name is used under optional information  # in edit admin area
+List-display of both the first and the last name
+Alphabetical Ordering of elements according to the first name
+
+
+## DTL – Django Template Language
+Thus DTL is one of the template languages used to embed Django/python codes in HTML files.
+DTL has an advantage over others due to its
+
+    Simplicity
+    Easy to learn the syntax
+    extensible
+
+## Basic Syntax of the Django Template Language (DTL)
+
+DTL syntax is similar to python and is very easy to learn. It is further divided into 3 types.
+
+#1. Template tags
+
+Note : A template tag is enclosed by {% and %}. Some examples are:
+
+    Condition statements/Display logic –> {% if %} … {% endif %}
+    Loops –> {% for x in y %} … {% endfor %}
+    Block Declaration –> {% block content %} … {% endblock %}
+    Content import –> {% include “header.html” %}
+    Inheritance –> {% extends “base.html” %}
+	
+#2. Template variables
+Template variables are similar to the variable used in python.
+Note: The syntax used is {{ and }} Some examples are:
+
+    Simple variable –> {{ title }} , {{ x }}
+    List attributes –> {{ fruits_list.0 }}
+    Object attributes –> {{ name.title }}
+    Dictionary attribute –> {{ dict.key }}
+
+Note: Here, list.0 is used unlike list[0] in python to access first element of a Python list
+
+#3. Template Filter
+A template filter is used for filtering the variables/attributes.
+Note: The symbol  | (pipe) is used for indicating filters.
+Some examples are:
+
+    Changing cases –> {{ name|title }} or {{ characters|upper_case }}
+    List filters/slicing –> {{ list|slice = “ :5 “ }}
+    This means that from the list, show only the first 5 elements.
+    Truncation –> {{ name|truncatewords : 80 }}
+    This means that from the name, show only first 80, i.e., truncate the name to the first 80 characters.
+    Default –> {{ value|default =”0” }} 
+    This means that shows a default value of 0 if variable value is empty.
+	
+
+## Creating a Django Templates Folder
+In Django, since we are keeping all the front end files separate from the back-end, these Text files (mostly HTML files) are also kept in a separate folder.
+
+Now if we go to the settings.py, there will a TEMPLATES option as shown above. Now the important thing here is the APP_DIRS
+	
+	'APP_DIRS':True
+
+What this line means is that Django will search for templates/HTML files in a folder called templates.
+
+That means we have to make a templates folder in our Django app and save all the HTML files there.
+
+## Namespacing the Template
+
+When we load a particular template file, Django goes through each app listed in the INSTALLED_APPS in the settings.py. It does so in a top to bottom order and loads the first file it gets with that name. 
+We might have more than one app in our project, and also there can be two HTML files with the same name in more than one app.
+Suppose you have a Books app and a Pens app. Both have an index.html file in their templates folder.
+If you try to include index.html in your views.py for the Books app, Django might end up loading the wrong index.html file.
+This happens because, as mentioned earlier, it loads the first instance of the file from the INSTALLED_APPS list.
+And it can lead to problems. To avoid this, we use namespacing in the template folders.
+What I mean by that is to add another folder with the app name inside the template folder. 
+
+In my case, the app is named “books _website“, so I will namespace the templates folder with that name (as shown in the screenshot above).
+
+Thus, when you include the file in your views.py, you will write the include path as
+	
+	“ <app_name>/<HTML file>”
+
+That is, in my case, it will be
+	
+	‘books_website/index.html’ 
+	
+create userview.html
+it is a general for loop to print the list of books.
+{% for book in books %}
+    <li>{{book.title}}</li><br>
+{% endfor %}
+
+## Rendering templates in views.py 
+
+The most efficient way to send model information into template files is by using the function render in views.py.
+	
+	render(request,<html file path>,<context>)
+
+The render method takes the context(which is the model information), sends it to the template using its path, and then returns the appropriate response for the browser.
+
+In views.py, write the code in userview:
+	
+	def userview(request):
+		books = BookModel.objects.all()
+		context = {
+			'books':books
+		}
+		return render(request,'books_website/BookView.html', context)
+		
+Here:
+    we stored Model data into books
+    Note: we created a context as a dictionary
+    we called the render function which took request, template path, and context as its argument and returns back the appropriate response.
+	
+
+## Template inheritance
+
+Django provides a method called Template Inheritance. This avoids the need to repeat the code and add unnecessary redundancy to it.
+Another benefit of template inheritance is the ability to modify the main file of code so the UI/HTML changes reflect for the entire application.
+Thus we create basic HTML files that have the complete code frame that’s common between all the pages.
+
+We store this file in a template folder outside the apps (in the project) so that every Django app can access them.
+
+To inherit the code within other templates, add this line to TEMPLATES in settings.py.
+	
+	'DIRS': [os.path.join(BASE_DIR,'django_project/templates')],
+
+This line is easy to understand:
+    We get the base Django directory using the pre-defined variable BASE_DIR (Our Django project folder)
+    Then with the os module, we join it to the django_project/templates line.
+	
+Now lets us make a simple basic.html file, which adds “Hello Viewer” to all its webpages.
+The syntax used to write the file is:
+
+	<h2>Hello Viewer</h2>
+	{% block content %}
+		<p> PlaceHolder to be Replaced</p>
+	{% endblock %} 
+
+In the basic file, we add a block (with a name “content” in my case) and then add a default line in case an error occurs while loading the other HTML file.
+
+
+Now let us change the BookView.html file to incorporate basic.html file.
+
+Write the code below into the file
+	
+	{% extends 'basic.html' %}
+	 
+	{% block content %}
+		{% for book in books %}
+			<li>{{book.title}}</li><br>
+		{% endfor %}
+	{% endblock %}
+
+We add a line {% extends ‘basic.html’ %} in the starting to inherit the Parent file(basic.html)
+In order to indicate Django, that the block ( name – content) present in basic.html file is to be replaced, we add a block with the same name (that we used in the basic.html file).
+Inside that block, we write the code which will replace the default line 
+
+
+## Template inclusion
+
+Similar to Inheritance, Django Template Files can also be included in other HTML files.
+Let us make another file BookViewAdd.html which adds a heading “Books Hub” and let’s include it into BookView.html
+Create another HTML file by the name(BookViewAdd) into books_website/templates folder and just add the line

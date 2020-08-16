@@ -29,5 +29,11 @@ class Kcb(models.Model):
     days_last_phone_change = models.IntegerField()
     prob_topay = models.FloatField()
 
+    #prob_topay = models.CharField(max_length=80)
+
     class Meta:
         db_table = 'kcb'
+        #ordering = ['days_birth']
+
+    def __str__(self):
+        return f"{self.days_birth} : {self.days_employed} : {self.prob_topay}"

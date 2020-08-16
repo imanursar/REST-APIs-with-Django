@@ -31,7 +31,7 @@ def kcb_ml_list(request):
             return JsonResponse(Kcb_list_serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(Kcb_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# Create your views here.
+# Create your predict here.
 @api_view(['GET', 'POST', 'DELETE'])
 def kcb_ml_pred(request):
     # Create a new object
@@ -40,5 +40,13 @@ def kcb_ml_pred(request):
         Kcb_list_serializer = KcbSerializer(data=Kcb_list_data)
         if Kcb_list_serializer.is_valid():
             Kcb_list_serializer.save()
-            return JsonResponse(PredictorConfig.predict(Kcb_list_serializer.data,request.headers.get('reason')))
+            return JsonResponse(PredictorConfig.predict(Kcb_list_serializer.data,request.headers.get('reason')),status = 200)
         return JsonResponse(Kcb_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# @api_view(['GET'])
+def userview(request):
+	Kcb_list = Kcb.objects.all()
+	context = {
+		'Kcb_list':Kcb_list
+	}
+	return render(request,'kcb_ml/userview.html', context)

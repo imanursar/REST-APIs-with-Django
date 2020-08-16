@@ -1,0 +1,73 @@
+## Basic Structure of Django Models
+Django models are classes that represent a table or collection in our Database. It contains all the information regarding the table. These models are stored together in Django in a file models.py
+
+	class Modelname(models.Model):
+		'''A class representing a model derived from Model class'''
+		#Fields
+		Field_name = models.CharField(max_length = , hepl_text = , choices = , Null etc)
+	 
+		#Metadata
+		class Meta:
+			Ordering = [‘field_name’]
+	 
+		#Methods
+		def __str__(self):
+			return '<readable_name>'
+			
+
+# Fields in a Model
+
+A particular model can have any number of fields, these represent the various attributes of the database table.
+There can be many different types of fields
+    CharField
+    IntegerValue
+    Email
+	
+These fields can also take arguments like 
+    max_length – The max number of characters possible.
+    Primary key – This tells Django that this field is going to be unique for all the entries.
+    Foreign key – This is used to connect one model with another model.
+    NULL – If true, will convert empty fields into null value, char field take them as empty strings
+    Choices – If the field has to be only one of the given options(like a option box)
+    Blank – If true, the field can be allowed to be blank,otherwise has to be filled.
+	
+
+# Model Metadata
+
+This metadata has various features; one of the most important being the ordering. It allows you to show the responses in a particular order in the database when you give a request for that. 
+
+The syntax is as follows
+	
+	ordering ['<Name>']
+
+This tells models to arrange the elements in the DB in the order according to the <name> ie could be alphabetical if <name> is CharField or could be Numerical ascending order if its IntergerField etc.
+
+if the syntax is used with “-“ sign, this means that the ordering should be in the reverse order
+	
+	ordering [-'<name>']
+	
+
+# Methods in Django Models
+
+These are used for better client interface, that is for better presentation etc.
+
+__str__ , for example, tells you what to show you (like a short name) in the admin site for each particular element in the database. (instead of showing the full information)
+
+
+## Creating a Table in the Database
+To create the table first we need to apply migrations. Write the code below in the shell
+	
+	python manage.py migrate
+	python manage.py makemigrations <app_name>
+	Python manage.py sqlmigrate <app_name> 0001
+
+And once again, run:
+	
+	Python manage.py migrate
+
+Note that whenever we make changes to our model we need to repeat the steps above in order to make changes in the table in the DB as well.
+
+
+## Retrieving information from DB
+
+

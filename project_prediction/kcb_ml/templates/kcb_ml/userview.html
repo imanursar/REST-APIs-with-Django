@@ -1,0 +1,8 @@
+{% extends 'basic.html' %}
+{% block content %}
+    {% include 'kcb_ml/userviewadd.html' %}
+    <h2>days birth</h2>
+    {% for book in Kcb_list %}
+        <li>{{book.days_birth}}</li><br>
+    {% endfor %}
+{% endblock %}

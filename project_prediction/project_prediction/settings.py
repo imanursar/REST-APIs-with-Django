@@ -68,7 +68,7 @@ ROOT_URLCONF = 'project_prediction.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates_html')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
