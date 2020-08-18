@@ -1,0 +1,48 @@
+in the front end, this pretty view, which makes up the complete web page, is usually achieved using CSS(Cascading style sheets), JavaScript files, and pictures. We store all these pictures, CSS files, and JS in a folder called static, while the files are called static files.
+
+create static > [project_name] > images
+create static > [project_name] > css_js files
+
+## file CSS
+
+	body{
+		background: white url("images/books.jpg") no-repeat;
+	}
+
+CSS syntax is easy to understand, and if you give it a try, you will get what we are trying to do. So basically here:
+
+    Purpose: We are changing the background of the webpage
+    background: white implies that the webpage should show white BG color in case the image does not load up due to some error
+    URL(“images/books.jpg”) is the path for the image that we are using.
+    No-repeat: indicates that the image should not repeat itself in case the browser window is larger than the image-size.
+	
+## FIle HTML view in template
+
+	<html>
+		<head>
+			<p> Headeer Information </p>
+		</head>
+		 
+		<body>
+			<p> Main Text Code </p>
+		</body>
+		 
+	</html>
+	
+
+## combine those files
+
+	<head>
+	   <link rel="stylesheet" type="text/css" href= "{%  static 'kcb_ml/style.css' %}">
+	</head>
+	
+    Purpose: To link CSS file to the HTML file
+    <link: is an HTML attribute through which we add CSS files to it
+    rel: This attribute defines the relation between the current file and the linked object
+    type: Defines the type of object we are linking.
+    href: This attribute tells the path of the file that we are linking (CSS in this case)
+	
+Note: Always keep the Template inheritance line at the top. This is because the BookView.html file is an extrapolation of the base file (basic.html) present in the project directory.
+
+So before Django reads this file, it should first read the inherited file. 
+

@@ -68,6 +68,8 @@ And once again, run:
 Note that whenever we make changes to our model we need to repeat the steps above in order to make changes in the table in the DB as well.
 
 
-## Retrieving information from DB
+## Connecting to other models using Foreign Key
 
+	Author_id = models.ForeignKey('AuthorModel', on_delete = models.CASCADE)
+	
 

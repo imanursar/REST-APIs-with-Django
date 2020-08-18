@@ -1,0 +1,67 @@
+## Creating HTML forms for Django
+
+We can create forms in HTML itself using the  <form> attribute and get information from client using <input> attribute. The syntax for a typical HTML form is given below:
+	
+	<form action="</action/>" method="post">
+		<label for="element_id">Your name: </label>
+		<input id="element_id" type="text" name="<name>" value="<pre-set_value>">
+		<input type="submit" value="OK">
+	</form>
+
+Let’s understand what the above code means:
+
+    Action: This tells HTML where to send the submitted form data. It usually contains the URL we want to send the data to
+    Method=”POST” This is a particular Method that we use while sending information to the server. There is a GET method as well, which we will need in this article.
+    label for: This label gives a name to identify that particular label. For eg: <label for =’fname’>First Name:</label> Here we are giving a short name fname to identify the label “First Name.”
+    <input id=, type=, name=, value= >: This input attribute is the most important in the HTML form, Input specifies the form field that we will take from the client—for example, the type, name, pre-set value assigned to it, etc.
+    <input type=” submit”: This input submits the Form client entered.
+
+Instead of using the <input> attribute to create form fields, we can use Django forms, which is a much efficient way. But before that, we need to learn more about GET and POST methods.
+
+## When to use GET and when to use POST
+
+By default, the browser uses the GET method to request resources from the server.
+
+For example, continuing from our books model example, we automatically use GET requests in the backend to pull the books’ data. Since we aren’t modifying the list on the front-end, this method works perfectly fine.
+But let’s say if we want to add a book into the model DB. Then we are basically changing the DB elements, and hence then we require the POST method. Therefore, the POST method sends some information to the server. 
+When we changed the information regarding a Book or were adding a Book in the Django admin site, we used the POST method.
+And when we were just looking at the list of books under BookModel in the admin site, we used the GET method.
+
+## Leveraging Django Forms
+
+The working of Django forms is similar to that of Django Models. We create a form class and save them in a separate forms.py file.
+The only difference between models and forms is that in models, we map model fields to the database fields while in forms, we map the form fields to the HTML form <input> elements.
+
+	create forms.py
+
+## Creating a SearchForm to search for Book from the Book_website
+
+#Creating a SearchForm in forms.py
+	
+	if request.method == 'POST':
+			form = SearchForm(request.POST)
+	 
+			if form.is_valid():
+				book_title = form.cleaned_data['book_title']
+	 
+				try:
+					book = BookModel.objects.get(title = book_title)
+				except book_title.DoesNotExist():
+					raise Http404('This book does not exist')
+	 
+				return HttpResponseRedirect(f'/books/{book_title}', {'book':book})
+
+
+form = SearchForm(request.POST) saves the information that the client entered into the created form object “form.“
+form.is_valid() checks if the information entered in the field is valid or not. i.e., e.g., whether we have entered email only in the EmailField or not.
+form.cleaned_data[‘book_title’]: This attribute of the form library automatically converts the information entered by the client into the correct python accepted format, and thus the name cleaned_data
+try and except block: This is called exceptional handling in python which you might have learned in Python Exceptional Handling
+If the Book Title that the client entered is present in the DB, then we will get the information about the book. Otherwise, if the book does not exist, then we raise a Http404 error, which is present in the Django.shortcuts library And once we save the information about the book from the DB.
+
+
+## create searchuser.html
+
+{% csrf_token %} that is the Cross-Site Request Forgery tokens protects against csrf attacks and hence used for security purposes for the forms.
+
+
+
