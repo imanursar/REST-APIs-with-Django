@@ -1,8 +1,19 @@
 {% extends 'basic.html' %}
-{% block content %}
+{% load static %}
+
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href= "{%  static 'css/style.css' %}">
+  <title>Linguist</title>
+</head>
+<body>
+    {% block content %}
     {% include 'kcb_ml/userviewadd.html' %}
     <h2>days birth</h2>
-    {% for book in Kcb_list %}
-        <li>{{book.days_birth}}</li><br>
+    {% for user in Kcb_list %}
+        <li>{{user.days_birth}}</li><br>
     {% endfor %}
-{% endblock %}
+    {% endblock %}
+</body>
+
+</html>
