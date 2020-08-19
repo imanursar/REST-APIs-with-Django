@@ -117,6 +117,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# handle {"detail": "Authentication credentials were not provided."}
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.TokenAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#     ),
+#     'PAGE_SIZE': 10
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

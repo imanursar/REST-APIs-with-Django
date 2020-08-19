@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from kcb_ml import views
-from django.urls import path
+from django.urls import path, re_path
 
 urlpatterns = [
     url(r'^api/kcb_ml_view$', views.kcb_ml_list),
@@ -12,6 +12,12 @@ urlpatterns = [
     # path('api/users/', views.userview_feature, name='userview_feature'),
     url(r'^api/users/(?P<user_id>[0-9]+)$', views.useridview),
     # path('api/users/<user_id>', views.useridview, name='useridview'),
+
+    # Paths for login
+    re_path(r'^login(?:\/)?$', views.Login.as_view()),
+    re_path(r'^login/refresh(?:\/)?$', views.LoginRefresh.as_view()),
+    path('login/register', views.Register.as_view()),
+
 
     # url(r'^api/tutorials/(?P<pk>[0-9]+)$', views.tutorial_detail),
     # url(r'^api/tutorials/published$', views.tutorial_list_published)
