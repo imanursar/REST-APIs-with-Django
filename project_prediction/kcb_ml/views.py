@@ -3,8 +3,8 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 
-from kcb_ml.models import Kcb
-from kcb_ml.serializers import KcbSerializer
+from kcb_ml.models import Kcb,Kcb_result
+from kcb_ml.serializers import KcbSerializer,KcbSerializer_result
 from rest_framework.decorators import api_view
 from .apps import PredictorConfig
 from .forms import SearchForm
@@ -41,8 +41,14 @@ def kcb_ml_pred(request):
         Kcb_list_data = JSONParser().parse(request)
         Kcb_list_serializer = KcbSerializer(data=Kcb_list_data)
         if Kcb_list_serializer.is_valid():
+            pred = PredictorConfig.predict(Kcb_list_serializer.validated_data,request.headers.get('reason'))
             Kcb_list_serializer.save()
-            return JsonResponse(PredictorConfig.predict(Kcb_list_serializer.data,request.headers.get('reason')),status = 200)
+            Kcb_list_serializer_result = KcbSerializer_result(data={"userID":Kcb_list_data.get("userID"),"prob_topay":pred.get("prob_topay")})
+            if Kcb_list_serializer_result.is_valid():
+                # print(Kcb_list_serializer_result)
+                Kcb_list_serializer_result.save()
+                return JsonResponse(pred,status = 200)
+            return JsonResponse(Kcb_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return JsonResponse(Kcb_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # @api_view(['GET'])

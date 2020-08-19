@@ -8,8 +8,8 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-
 class Kcb(models.Model):
+    userID = models.IntegerField()
     ext_source_2 = models.FloatField()
     ext_source_3 = models.FloatField()
     good_price_to_credit_ratio = models.FloatField()
@@ -27,13 +27,25 @@ class Kcb(models.Model):
     avg_days_enddate_fact = models.FloatField()
     count_prev_pos = models.IntegerField()
     days_last_phone_change = models.IntegerField()
-    prob_topay = models.FloatField()
 
-    #prob_topay = models.CharField(max_length=80)
 
     class Meta:
         db_table = 'kcb'
         #ordering = ['days_birth']
 
     def __str__(self):
-        return f"{self.days_birth} : {self.days_employed} : {self.prob_topay}"
+        return f"{self.days_birth} : {self.days_employed}"
+
+class Kcb_result(models.Model):
+    # data = models.ForeignKey(Kcb, on_delete=models.CASCADE)
+    userID = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    prob_topay = models.FloatField()
+
+
+    class Meta:
+        db_table = 'kcb_result'
+        #ordering = ['days_birth']
+
+    def __str__(self):
+        return f"{self.id} : {self.prob_topay}"

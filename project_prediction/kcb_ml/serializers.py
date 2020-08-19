@@ -1,12 +1,13 @@
 from rest_framework import serializers
-from kcb_ml.models import Kcb
+from kcb_ml.models import Kcb,Kcb_result
 
 
 class KcbSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Kcb
-        fields = ('ext_source_2',
+        fields = ('userID',
+                  'ext_source_2',
                   'ext_source_3',
                   'good_price_to_credit_ratio',
                   'days_birth',
@@ -22,6 +23,13 @@ class KcbSerializer(serializers.ModelSerializer):
                   "days_id_publish",
                   "avg_days_enddate_fact",
                   "count_prev_pos",
-                  "days_last_phone_change",
-                  "prob_topay"
+                  "days_last_phone_change"
+                  )
+
+class KcbSerializer_result(serializers.ModelSerializer):
+
+    class Meta:
+        model = Kcb_result
+        fields = ('userID',
+                  "prob_topay",
                   )
