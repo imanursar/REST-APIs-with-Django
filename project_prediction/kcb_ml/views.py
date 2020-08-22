@@ -1,29 +1,18 @@
 from django.shortcuts import render, HttpResponse,HttpResponseRedirect,Http404
 from django.http.response import JsonResponse
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
-from django.conf import settings
-from django.core.validators import validate_email
-
 from rest_framework.parsers import JSONParser
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view
-
-from .apps import PredictorConfig
-from .forms import SearchForm
-from .authentication import ToDoTokenAuthentication
-from . import utils
-import jwt
 
 from kcb_ml.models import Kcb,Kcb_result
 from kcb_ml.serializers import KcbSerializer,KcbSerializer_result
+from .apps import PredictorConfig
+from .forms import SearchForm
+from django.core.exceptions import ObjectDoesNotExist
 
-# View class to Register users
 # View class to Register users
 class Register(APIView):
     def post(self, request):
@@ -73,7 +62,6 @@ class Register(APIView):
     def validate_required_input(param, value):
         """
         Function to validate the required input of post method
-
         :param param: It can take one of the values from required param of post method
         :param value: Value of the passed param
         :return: value if value passes the validation criteria for the given param
@@ -118,8 +106,7 @@ class Login(APIView):
     def post(self, request):
 
         access_token, refresh_token = utils.generate_tokens(request.user)
-        # print(access_token)
-        # print(refresh_token)
+
         if access_token is None or refresh_token is None:
             return Response({"error": "Something went wrong"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -192,21 +179,38 @@ class LoginRefresh(APIView):
 
 
 # Create your views here.
-@api_view(['GET', 'POST', 'DELETE'])
-def kcb_ml_list(request):
-    # Retrieve objects (with condition)
-    if request.method == 'GET':
+# @api_view(['GET', 'POST', 'DELETE'])
+# def kcb_ml_list(request):
+#     # Retrieve objects (with condition)
+#     if request.method == 'GET':
+#         Kcb_list = Kcb.objects.all()
+#         prob = request.GET.get('prob_topay', None)
+#         if prob is not None:
+#             Kcb_list = Kcb_list.filter(prob__icontains=prob)
+#
+#         Kcb_list_serializer = KcbSerializer(Kcb_list, many=True)
+#         return JsonResponse(Kcb_list_serializer.data, safe=False)
+#         # 'safe=False' for objects serialization
+#
+#     # Create a new object
+#     elif request.method == 'POST':
+#         Kcb_list_data = JSONParser().parse(request)
+#         Kcb_list_serializer = KcbSerializer(data=Kcb_list_data)
+#         if Kcb_list_serializer.is_valid():
+#             Kcb_list_serializer.save()
+#             return JsonResponse(Kcb_list_serializer.data, status=status.HTTP_201_CREATED)
+#         return JsonResponse(Kcb_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class kcb_ml_view(APIView):
+    def get(self, request):
         Kcb_list = Kcb.objects.all()
-        prob = request.GET.get('prob_topay', None)
+        prob = request.GET.get('userID', None)
         if prob is not None:
             Kcb_list = Kcb_list.filter(prob__icontains=prob)
 
         Kcb_list_serializer = KcbSerializer(Kcb_list, many=True)
         return JsonResponse(Kcb_list_serializer.data, safe=False)
-        # 'safe=False' for objects serialization
-
-    # Create a new object
-    elif request.method == 'POST':
+    def post(self, request):
         Kcb_list_data = JSONParser().parse(request)
         Kcb_list_serializer = KcbSerializer(data=Kcb_list_data)
         if Kcb_list_serializer.is_valid():
@@ -214,66 +218,131 @@ def kcb_ml_list(request):
             return JsonResponse(Kcb_list_serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(Kcb_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # Create your predict here.
-@api_view(['GET', 'POST', 'DELETE'])
-def kcb_ml_pred(request):
-    # Create a new object
-    if request.method == 'POST':
+# @api_view(['GET', 'POST', 'DELETE'])
+# def kcb_ml_pred(request):
+#     # Create a new object
+#     if request.method == 'POST':
+#         Kcb_list_data = JSONParser().parse(request)
+#         Kcb_list_serializer = KcbSerializer(data=Kcb_list_data)
+#         if Kcb_list_serializer.is_valid():
+#             pred = PredictorConfig.predict(Kcb_list_serializer.validated_data,request.headers.get('reason'))
+#             Kcb_list_serializer.save()
+#             Kcb_list_serializer_result = KcbSerializer_result(data={"userID":Kcb_list_data.get("userID"),"prob_topay":pred.get("prob_topay")})
+#             if Kcb_list_serializer_result.is_valid():
+#                 # print(Kcb_list_serializer_result)
+#                 Kcb_list_serializer_result.save()
+#                 return JsonResponse(pred,status = 200)
+#             return JsonResponse(Kcb_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         return JsonResponse(Kcb_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class kcb_ml_pred(APIView):
+    def post(self, request):
         Kcb_list_data = JSONParser().parse(request)
         Kcb_list_serializer = KcbSerializer(data=Kcb_list_data)
         if Kcb_list_serializer.is_valid():
             pred = PredictorConfig.predict(Kcb_list_serializer.validated_data,request.headers.get('reason'))
-            Kcb_list_serializer.save()
             Kcb_list_serializer_result = KcbSerializer_result(data={"userID":Kcb_list_data.get("userID"),"prob_topay":pred.get("prob_topay")})
             if Kcb_list_serializer_result.is_valid():
-                # print(Kcb_list_serializer_result)
                 Kcb_list_serializer_result.save()
+                Kcb_list_serializer.save()
                 return JsonResponse(pred,status = 200)
             return JsonResponse(Kcb_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return JsonResponse(Kcb_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # @api_view(['GET'])
-def userview(request):
-	Kcb_list = Kcb.objects.all()
-	context = {
-		'Kcb_list':Kcb_list
-	}
-	return render(request,'kcb_ml/userview.html', context)
+# def userview(request):
+# 	Kcb_list = Kcb.objects.all()
+# 	context = {
+# 		'Kcb_list':Kcb_list
+# 	}
+# 	# return render(request,'kcb_ml/userview.html', context)
+#
+class userview(APIView):
+    def get(self, request):
+        	Kcb_list = Kcb.objects.all()
+        	context = {
+        		'Kcb_list':Kcb_list
+        	}
+        	return render(request,'kcb_ml/userview.html', context)
 
-def userview_feature(request):
-    Kcb_list = Kcb.objects.all()
+# def userview_feature(request):
+#     Kcb_list = Kcb.objects.all()
+#
+#     html = ''
+#     for user in Kcb_list:
+#         var = f'<li> {user.days_birth} </li><br>'
+#         html = html + var
+#     return HttpResponse(html,status = 200)
+#
 
-    html = ''
-    for user in Kcb_list:
-        var = f'<li> {user.days_birth} </li><br>'
-        html = html + var
-    return HttpResponse(html,status = 200)
+class userview_feature(APIView):
+    def get(self, request):
+        Kcb_list = Kcb.objects.all()
 
-def useridview(request,user_id):
-    user = Kcb.objects.get(id= f"{user_id}")
+        html = ''
+        for user in Kcb_list:
+            var = f'<li> {user.days_birth} </li><br>'
+            html = html + var
+        return HttpResponse(html,status = 200)
 
-    html = f'<h2> {user.id} </h2><br> <h2> {user.days_birth} </h2><br> <h2> {user.prob_topay} </h2><br>'
-    return HttpResponse(html,status=200)
+# def useridview(request,user_id):
+#     user = Kcb.objects.get(id= f"{user_id}")
+#
+#     html = f'<h2> {user.id} </h2><br> <h2> {user.days_birth} </h2><br> <h2> {user.prob_topay} </h2><br>'
+#     return HttpResponse(html,status=200)
 
-def searchuserview(request):
+class useridview(APIView):
+    def get(self, request,user_id):
+        user = Kcb.objects.get(userID= f"{user_id}")
+        result = Kcb_result.objects.get(userID= f"{user_id}")
 
-    if request.method == 'POST':
+        html = f'<h2> {"userID =  "} {user.userID} </h2><br> <h2> {"days birth =  "} {user.days_birth} </h2><br> <h2> {"result =  "} {result.prob_topay} </h2><br>'
+        return HttpResponse(html,status=200)
+
+# def searchuserview(request):
+#
+#     if request.method == 'POST':
+#         form = SearchForm(request.POST)
+#
+#         if form.is_valid():
+#             amt = form.cleaned_data['amt']
+#             try:
+#                 amts = Kcb.objects.get(id = amt)
+#                 # amts = Kcb.objects.filter(amt_goods_price = amt)
+#             # except ObjectDoesNotExist:
+#             except amt.DoesNotExist():
+#                 raise Http404('This book does not exist')
+#
+#             return HttpResponseRedirect(f'{amt}', {'amt':amts})
+#
+#     else:
+#         form = SearchForm()
+#         context ={
+#             'form':form,
+#         }
+#     return render(request, 'kcb_ml/searchuser.html', context)
+
+class searchuserview(APIView):
+    def post(self, request):
         form = SearchForm(request.POST)
 
         if form.is_valid():
             amt = form.cleaned_data['amt']
             try:
-                amts = Kcb.objects.get(id = amt)
+                amts = Kcb.objects.get(userID = amt)
                 # amts = Kcb.objects.filter(amt_goods_price = amt)
             # except ObjectDoesNotExist:
             except amt.DoesNotExist():
-                raise Http404('This book does not exist')
+                raise Http404('This user does not exist')
 
             return HttpResponseRedirect(f'{amt}', {'amt':amts})
 
-    else:
+    def get(self, request):
         form = SearchForm()
         context ={
             'form':form,
         }
-    return render(request, 'kcb_ml/searchuser.html', context)
+        return render(request, 'kcb_ml/searchuser.html', context)

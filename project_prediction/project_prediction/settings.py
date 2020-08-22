@@ -84,6 +84,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project_prediction.wsgi.application'
 
 
+# adding versioning to your API
+# When API versioning is enabled, the request.version attribute will contain a
+# string that corresponds to the version requested in the incoming client request.
+# Like in the sample code below, we can access the version attribute and alter
+# the behaviour of our API depending on the version number.
+# REST_FRAMEWORK = {
+#     # When you enable API versioning, the request.version attribute will contain a string
+#     # that corresponds to the version requested in the incoming client request.
+#     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+# }
+
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
