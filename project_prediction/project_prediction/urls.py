@@ -16,8 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^', include('kcb_ml.urls')),
+    # url(r'^admin/', admin.site.urls),
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    # url(r'^', include('kcb_ml.urls')),
+    path('', include('kcb_ml.urls')),
+    url(r'^$',TemplateView.as_view(template_name='homepage.html')),
 ]
