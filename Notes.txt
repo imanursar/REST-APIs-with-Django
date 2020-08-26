@@ -1,0 +1,60 @@
+##setting.py
+
+INSTALLED_APPS = [
+    ...
+    'pages.apps.PagesConfig', # new
+]
+
+TEMPLATES = [
+    {
+        ...
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], # new
+        ...
+    }
+]
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+
+##urls
+	path('', include('pages.urls')),
+##app/urls
+	path('', HomePageView.as_view(), name='home'),
+
+##views
+from django.views.generic import TemplateView
+
+class HomePageView(TemplateView):
+    template_name = 'home.html'
+	
+##static
+in templates/home.html
+
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Django Favicon Tutorial</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+  </head>
+  <body>
+    <h1>Hello World!</h1>
+  </body>
+</html>
+
+
+#############################################################################################
+
+django-admin startproject movie_site
+python manage.py startapp movies
+
+python manage.py makemigrations <apps>
+python manage.py migrate
+
+python manage.py runserver 8080
+
+python manage.py createsuperuser
+
+
+
+
+
