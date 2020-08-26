@@ -1,0 +1,1 @@
+Urls define the entry points or where to access content. Templates define the end points that give form to the final content. And apps serve as the middleware between urls and templates, altering or adding content from a database or user interactions

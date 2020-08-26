@@ -1,0 +1,23 @@
+Serializers (serializers.py)
+
+First up we’re going to define some serializers, which will take care of the SQL to JSON conversion that we are looking for. Django Rest Framework can also handle other serializations like XML, and so forth, but we’re going to use JSON. If you’ve used Marshmallow for serialization in Flask, this will look familiar. Let’s create a new module within our api directory called serializers.py that we’ll use for our data representations.
+
+
+from django.contrib.auth.models import User, Group
+from rest_framework import serializers
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ['url', 'username', 'email', 'groups']
+class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Group
+        fields = ['url', 'name']
+		
+		
+using hyperlinked relations in this case by configuring Django Rest Framework’s serializers to extend HyperlinkedModelSerializer. This choice affords us the following:
+
+    By default, it does not include an id field.
+    It does include a clickable url field, which will execute the subsequent request when clicked.
+	
