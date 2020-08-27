@@ -25,7 +25,7 @@ class Anime(models.Model):
     title_english = models.CharField(max_length=100,null=True)
     synonyms = models.CharField(max_length=100,null=True)
     description = models.TextField(max_length=10000)
-    image = models.ImageField(upload_to='movies')
+    image = models.ImageField(upload_to='anime')
     type_show = models.CharField(choices=LANGUAGE_CHOICES, max_length=2,null=True)
     episodes = models.IntegerField(default=12)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
